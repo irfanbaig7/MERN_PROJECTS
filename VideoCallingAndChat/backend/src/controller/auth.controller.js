@@ -43,7 +43,7 @@ export const signup = async (req, res, next) => {
         // check existing user
         const existUser = await User.findOne({ email })
 
-        if (existUser) {
+        if (!existUser) {
             return res.status(400).json({ message: "Email alredy exists" })
         }
 
@@ -57,7 +57,7 @@ export const signup = async (req, res, next) => {
             fullname,
             email,
             password,
-            profilPic: randomAvatar, // for every new signup user have there random-gen avatar
+            profilePic: randomAvatar, // for every new signup user have there random-gen avatar
         })
 
 
@@ -73,8 +73,10 @@ export const signup = async (req, res, next) => {
         })
 
         res.status(201).json({
-            success: true, user: newUser
+            success: true, user: newUser, message: "Signup successfully"
         })
+        console.log("Signup successfully");
+        
 
     } catch (error) {
         res.status(500).json({
