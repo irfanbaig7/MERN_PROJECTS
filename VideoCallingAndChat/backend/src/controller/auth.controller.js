@@ -1,6 +1,6 @@
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken"
-import {email, z} from "zod"
+import { z } from "zod"
 
 
 // here we use zod for validation
