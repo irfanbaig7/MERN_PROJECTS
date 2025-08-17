@@ -1,25 +1,46 @@
 import { User } from "../models/user.model";
 import jwt from "jsonwebtoken"
+import {email, z} from "zod"
 
-export const signup = async (req, res) => {
-    const { fullname, email, password } = req.body()
+
+// here we use zod for validation
+const signUpschema = z.object({
+    fullname: z.string().min(1, "Full name is required"),
+    email: z.string().email("Invalid email format"),
+    password: z.string().min(6, "Password must be at least 6 characters")
+})
+
+
+export const signup = async (req, res, next) => {
 
     try {
-        // valiadations 
-        if (!email || !password || !fullname) {
-            return res.status(400).json({ message: "All fields are required" })
+        // valiadations with using zod
+        // if (!email || !password || !fullname) {
+        //     return res.status(400).json({ message: "All fields are required" })
+        // }
+
+        // if (password < 6) {
+        //     return res.status(400).json({ message: "Password must be at least 6 characters" })
+        // }
+
+        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // if (!emailRegex.test(email)) {
+        //     return res.status(400).json({ message: "Invalid email format" })
+        // }
+
+
+        // validate req
+        const result = signUpschema.safeParse(req.body)
+        if (!result) {
+            return res.status(400).json({
+                message: result.error.errors[0].message,
+            })
         }
 
-        if (password < 6) {
-            return res.status(400).json({ message: "Password must be at least 6 characters" })
-        }
+        const { fullname, email, password } = result.data;
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: "Invalid email format" })
-        }
-
+        // check existing user
         const existUser = await User.findOne({ email })
 
         if (existUser) {
@@ -32,11 +53,11 @@ export const signup = async (req, res) => {
         const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`
 
         // Creating a new user
-        const newUser = new User.create({
+        const newUser = await User.create({
             fullname,
             email,
             password,
-            profilPic: randomAvatar,
+            profilPic: randomAvatar, // for every new signup user have there random-gen avatar
         })
 
 
