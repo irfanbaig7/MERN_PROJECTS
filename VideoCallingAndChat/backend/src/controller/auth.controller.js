@@ -1,4 +1,4 @@
-import { User } from "../models/user.model.js";
+import  User  from "../models/User.js";
 import jwt from "jsonwebtoken"
 import { z } from "zod"
 
@@ -32,20 +32,24 @@ export const signup = async (req, res, next) => {
 
         // validate req
         const result = signUpschema.safeParse(req.body)
-        if (!result) {
+        if (!result.success) {
             return res.status(400).json({
                 message: result.error.errors[0].message,
             })
         }
+        console.log(result);
+        
 
         const { fullname, email, password } = result.data;
 
         // check existing user
+        console.log(email);
         const existUser = await User.findOne({ email })
-
-        if (!existUser) {
+        console.log(existUser);
+        if (existUser) {
             return res.status(400).json({ message: "Email alredy exists" })
         }
+        
 
 
         // creating random index to between 1 to 100
