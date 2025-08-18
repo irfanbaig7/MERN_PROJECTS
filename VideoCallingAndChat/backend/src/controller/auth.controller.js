@@ -1,56 +1,30 @@
-import  User  from "../models/User.js";
+import User from "../models/User.js";
 import jwt from "jsonwebtoken"
-import { z } from "zod"
 
 
-// here we use zod for validation
-const signUpschema = z.object({
-    fullname: z.string().min(1, "Full name is required"),
-    email: z.string().email("Invalid email format"),
-    password: z.string().min(6, "Password must be at least 6 characters")
-})
-
-
-export const signup = async (req, res, next) => {
+export const signup = async (req, res) => {
 
     try {
-        // valiadations with using zod
-        // if (!email || !password || !fullname) {
-        //     return res.status(400).json({ message: "All fields are required" })
-        // }
-
-        // if (password < 6) {
-        //     return res.status(400).json({ message: "Password must be at least 6 characters" })
-        // }
-
-        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        // if (!emailRegex.test(email)) {
-        //     return res.status(400).json({ message: "Invalid email format" })
-        // }
-
-
-        // validate req
-        const result = signUpschema.safeParse(req.body)
-        if (!result.success) {
-            return res.status(400).json({
-                message: result.error.errors[0].message,
-            })
+        const { fullname, email, password } = req.body;
+        if (!email || !password || !fullname) {
+            return res.status(400).json({ message: "All fields are required" })
         }
-        console.log(result);
-        
 
-        const { fullname, email, password } = result.data;
+        if (password < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters" })
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "Invalid email format" })
+        }
 
         // check existing user
-        console.log(email);
         const existUser = await User.findOne({ email })
-        console.log(existUser);
         if (existUser) {
             return res.status(400).json({ message: "Email alredy exists" })
         }
-        
-
 
         // creating random index to between 1 to 100
         const idx = Math.floor(Math.random() * 100) + 1;
@@ -80,18 +54,62 @@ export const signup = async (req, res, next) => {
             success: true, user: newUser, message: "Signup successfully"
         })
         console.log("Signup successfully");
-        
+
 
     } catch (error) {
         res.status(500).json({
-            error: "Something went wrong. inside SignUp-user",
+            error: "Something went wrong. inside SignUp",
         });
     }
 
 }
+
 export const login = async (req, res) => {
-    res.send("Login User")
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "All fields are required" })
+        }
+
+        const existUser = await User.findOne({ email })
+        if (!existUser) {
+            return res.status(401).json({ message: "Invalid email" })
+        }
+
+        // compare password
+        const isPassCorrect = await existUser.matchPassword(password)
+        if (!isPassCorrect) {
+            return res.status(401).json({ message: "Invalid password" })
+        }
+
+
+        // gen a jwt-token
+        const token = jwt.sign({ userId: existUser._id, }, process.env.JWT_SECRET_KEY, { expiresIn: "7d" })
+
+        // save this gen token into cookies
+        res.cookie("jwt", token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production"
+        })
+
+        // give success response
+        res.status(200).json({
+            success: true, message: "Login successfully", existUser
+        })
+        console.log("Login successfully");
+
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({
+            error: "Something went wrong. inside Login",
+        });
+    }
 }
 export const logout = async (req, res) => {
-    res.send("Logout User")
+    res.clearCookie("token")
+    res.status(200).json({ message: "LogOut successfully" })
 }
