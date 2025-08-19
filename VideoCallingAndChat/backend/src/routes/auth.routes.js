@@ -9,6 +9,7 @@ authRoutes.post("/logout", logout)
 
 authRoutes.post("/onboarding", protectedRoute, onboard)
 
+// recent login jo hai whi me me show hoga
 authRoutes.get("/me", protectedRoute, (req, res) => {
     res.status(200).json({ message: "Logged in", success: true, user: req.user })
 })
