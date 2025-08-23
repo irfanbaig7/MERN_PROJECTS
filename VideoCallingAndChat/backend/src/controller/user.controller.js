@@ -1,5 +1,6 @@
 import FriendRequest from "../models/FriendReq.model.js";
-import User from "../models/User.js";
+import User from "../models/User.js"
+
 
 
 export const getRecomendedUsers = async (req, res) => {
@@ -20,7 +21,7 @@ export const getRecomendedUsers = async (req, res) => {
     } catch (error) {
         console.log(error.message);
         res.status(500).json({
-            error: "Something went wrong. inside Login",
+            error: "Something went wrong. inside getRecomendedUsers",
         });
     }
 }
@@ -75,13 +76,51 @@ export const sendFriendReq = async (req, res) => {
             recipient: recipientId
         })
 
-        res.status(200).json({message: "Friend request Created successfully", friendRequest})
-        
+        res.status(200).json({ message: "Friend request Created successfully", friendRequest })
+
     } catch (error) {
         console.log(error.message);
         res.status(500).json({
-            error: "Something went wrong. inside getMyfriends",
+            error: "Something went wrong. inside sendFriendrequest",
         });
+    }
+}
+
+
+export const acceptFriendReq = async (req, res) => {
+    try {
+        const { id: requestId } = req.params
+        const friendRequest = await FriendRequest.findById(requestId)
+
+        if (!friendRequest) {
+            return res.status(400).json({ message: "friend req not found" })
+        }
+
+        // Verify the current user is the recipent
+        if (friendRequest.recipient.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Your are not authorized to accept this request" })
+        }
+
+
+        friendRequest.status = "accepted"
+        await friendRequest.save()
+
+        // add each user to the other's friends array
+        await User.findByIdAndUpdate(friendRequest.sender, {
+            $addToSet: { friends: friendRequest.recipient }
+        })
+
+        await User.findByIdAndUpdate(friendRequest.recipient, {
+            $addToSet: { friends: friendRequest.sender }
+        })
+
+        res.status(200).json({ message: "Frd request accepted" })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Somthing went wrong inside acceptFriendrequest"
+        })
     }
 }
 

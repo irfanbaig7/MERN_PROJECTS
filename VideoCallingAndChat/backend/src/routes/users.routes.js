@@ -13,6 +13,7 @@ userRoutes.get("/friends", getMyFriends)
 
 
 userRoutes.post("/friend-request/:id", sendFriendReq)
+userRoutes.put("/friend-request/:id/accept", acceptFriendReq)
 
 
 export default userRoutes
