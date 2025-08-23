@@ -124,3 +124,43 @@ export const acceptFriendReq = async (req, res) => {
     }
 }
 
+
+export const getfriendRequest = async (req, res) => {
+    try {
+        const incommingFrdReq = await FriendRequest.find({
+            recipient: req.user.id,
+            status: "pending"
+        }).populate("sender", "fullname profilePic nativeLanguage learingLanguage")
+
+        const acceptedReq = await FriendRequest.find({
+            sender: req.user.id,
+            status: "accepted"
+        }).populate("recipient", "fullname profilePic")
+
+        res.status(200).json({ incommingFrdReq, acceptedReq })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Somthing went wrong inside getfriendRequest"
+        })
+    }
+}
+
+
+export const getOutGoingFriendRequest = async (req, res) => {
+    try {
+        const outgoingRequest = await FriendRequest.find({
+            sender: req.user.id,
+            status: "pending"
+        }).populate("recipient", "fullname profilePic nativeLanguage learingLanguage")
+
+        res.status(200).json({outgoingRequest})
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Somthing went wrong inside getOutGoingFriendRequest"
+        })
+    }
+}
