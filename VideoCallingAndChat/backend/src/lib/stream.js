@@ -3,9 +3,7 @@ const apikey = process.env.STREAM_API_KEY
 const apiSecret = process.env.STREAM_API_SECRET
 
 if (!apikey || !apiSecret) {
-    console.error("Stream api or secret missing");
-
-    
+    console.error("Stream api or secret missing"); 
 }
 
 // lets created stream client using this client we communicate the stream application
@@ -24,6 +22,12 @@ export const upsertStreamUser = async (userData) => {
 
 
 export const generateStreamToken = (userId) => {
-
+    try {
+        // Ensure the userid are string
+        const userIdStr = userId.toString() 
+        return streamClient.createToken(userIdStr)
+    } catch (error) {
+        console.error("Error generateStreamToken", error);
+    }
 }
 
