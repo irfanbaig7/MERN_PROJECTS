@@ -10,6 +10,7 @@ import ChatPage from './pages/ChatPage'
 import { Toaster } from "react-hot-toast"
 import { useQuery } from '@tanstack/react-query'
 import axios from "axios"
+import { axiosInstance } from './lib/axios.js'
 
 const App = () => {
 
@@ -50,15 +51,15 @@ const App = () => {
       // const jsonRes = await data.json()
       // return jsonRes
 
-      // use Axios rather than fetch
-      const res = await axios.get('https://jsonplaceholder.typicode.com/todos')
+      // use Axios rather than fetch 
+      const res = await axiosInstance.get('http://localhost:5001/api/me')
       return res.data
     }
   })
 
-  console.log({data});
-  console.log({isLoading});
-  console.log({error});
+  console.log(data);
+  // console.log({isLoading});
+  // console.log({error});
   
 
    
