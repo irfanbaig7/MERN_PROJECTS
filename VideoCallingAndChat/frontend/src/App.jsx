@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Route, Routes, Link } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import SignUpPage from './pages/SignUpPage'
@@ -7,40 +7,66 @@ import OnboardingPage from './pages/OnboardingPage'
 import LoginPage from './pages/LoginPage'
 import CallPage from './pages/CallPage'
 import ChatPage from './pages/ChatPage'
-import toast, { Toaster } from "react-hot-toast"
+import { Toaster } from "react-hot-toast"
+import { useQuery } from '@tanstack/react-query'
+import axios from "axios"
 
 const App = () => {
+
+  // without using TanStack Query
+  // const [data, setData] = useState([])
+  // const [isLoading, setLoading] = useState(false)
+  // const [error, setError] = useState(null)
+
+  // useEffect(() => {
+
+  //   const getData = async () => {
+  //     setLoading(true)
+  //     try {
+  //       const data = await fetch('https://jsonplaceholder.typicode.com/todos/')
+  //       const jsonRes = await data.json()
+  //       setData(jsonRes)
+  //     } catch (error) {
+  //       setError(error)
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+
+  //   getData()
+    
+  // }, [])
+  
+  // console.log(data);
+
+
+  // use tanstack Query
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["todos"],
+    queryFn: async () => {
+      // with fetch
+      // const data = await fetch('https://jsonplaceholder.typicode.com/todos')
+      // const jsonRes = await data.json()
+      // return jsonRes
+
+      // use Axios rather than fetch
+      const res = await axios.get('https://jsonplaceholder.typicode.com/todos')
+      return res.data
+    }
+  })
+
+  console.log({data});
+  console.log({isLoading});
+  console.log({error});
+  
+
+   
+
+
+
   return (
     <div className='h-screen data-theme="night"'>
-      <p>App section</p>
-
-      <Link to={"/"} >Home</Link>
-      <br />
-
-      <Link to={"/signup"} >signUp</Link>
-      <br />
-
-      <Link to={"/login"} >login</Link>
-      <br />
-
-      <Link to={"/chat"} >chat</Link>
-      <br />
-
-      <Link to={"/notifications"} >notifiy</Link>
-      <br />
-
-      <Link to={"/call"} >call</Link>
-      <br />
-
-      <Link to={"/onboarding"} >onBoard</Link>
-      <br />
-      <br />
-      <br />
-
-
-      <button onClick={() => toast.error("hieee")}>CreateToast</button>
-
-
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/signup' element={<SignUpPage />} />
