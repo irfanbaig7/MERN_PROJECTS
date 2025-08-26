@@ -46,15 +46,16 @@ const App = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["todos"],
     queryFn: async () => {
-      // with fetch
+      // ** with fetch
       // const data = await fetch('https://jsonplaceholder.typicode.com/todos')
       // const jsonRes = await data.json()
       // return jsonRes
 
-      // use Axios rather than fetch 
-      const res = await axiosInstance.get('http://localhost:5001/api/me')
+      // ** use Axios rather than fetch 
+      const res = await axiosInstance.get('/api/me')
       return res.data
-    }
+    },
+    retry: false, // Auth check --that are help us to stop the refetching after by one. 
   })
 
   console.log(data);
