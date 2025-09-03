@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { signUp } from '../lib/Api.js';
 
 const SignUpPage = () => {
-  
+
   // const [isPending, setIsPending] = useState()
 
   const [signupData, setSignupData] = useState(
@@ -14,12 +16,17 @@ const SignUpPage = () => {
     }
   )
 
+  const queryClient = useQueryClient()
+
+  const { isPending, mutate: signupMutaion, error } = useMutation({
+    mutationFn: signUp,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }) // on sucess kya refetch karne ka kam karta hai 
+  });
+
   const handleSignup = (e) => {
     e.preventDefault()
+    signupMutaion(signupData)
   }
-
-
-
 
   return (
     <div className="h-screen flex items-center justify-center p-4 sm:p-6 md:p-8" data-theme="forest" >
@@ -32,9 +39,17 @@ const SignUpPage = () => {
             </span>
           </div>
 
+
+          {/* Error handling  */}
+          { error && (
+              <div className='alert alert-error mb-4'>
+                <span>{error?.response?.data?.message || error?.response?.data?.error || error.message}</span>
+              </div>
+            )
+          }
+
+
           <div className='w-full'>
-
-
             <form onSubmit={handleSignup}>
               <div className="space-y-4">
                 <div>
@@ -54,8 +69,8 @@ const SignUpPage = () => {
                       type="text"
                       placeholder="John Doe"
                       className="input input-bordered w-full"
-                      value={signupData.fullName}
-                      onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
+                      value={signupData.fullname}
+                      onChange={(e) => setSignupData({ ...signupData, fullname: e.target.value })}
                       required
                     />
                   </div>
@@ -105,9 +120,9 @@ const SignUpPage = () => {
                 </div>
 
                 <button className="btn btn-primary w-full" type="submit">
-                
-                    "Create Account"
-      
+
+                  {isPending ? "Signing Up..." : "Create Account"}
+
                 </button>
 
                 <div className="text-center mt-4">
@@ -120,22 +135,27 @@ const SignUpPage = () => {
                 </div>
               </div>
             </form>
-
-
-
-
           </div>
-
-
-
-
-
-
-
-
         </div>
-      </div>
 
+        <div className="hidden lg:flex w-full lg:w-1/2 bg-primary/10 items-center justify-center">
+          <div className="max-w-md p-8">
+            {/* Illustration */}
+            <div className="relative aspect-square max-w-sm mx-auto">
+              <img src="/Videocallpana.png" alt="Language connection illustration" className="w-full h-full" />
+            </div>
+
+            <div className="text-center space-y-3 mt-6">
+              <h2 className="text-xl font-semibold">Connect with language partners worldwide</h2>
+              <p className="opacity-70">
+                Practice conversations, make friends, and improve your language skills together
+              </p>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
     </div>
 
   )
