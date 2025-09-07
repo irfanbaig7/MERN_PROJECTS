@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import { Route, Routes, Link, Navigate } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import SignUpPage from './pages/SignUpPage'
@@ -11,6 +10,9 @@ import { Toaster } from "react-hot-toast"
 import { useQuery } from '@tanstack/react-query'
 // import axios from "axios"
 import { axiosInstance } from './lib/axios.js'
+import PageLoader from './components/PageLoader.jsx'
+import { getAuthUser } from './lib/Api.js'
+import useAuthUser from './hooks/useAuthUser.js'
 
 const App = () => {
 
@@ -40,17 +42,19 @@ const App = () => {
 
   // use tanstack Query and axios(fetching data)
 
-  const { data:authData, isLoading, error } = useQuery({
-    queryKey: ["authUser"],
-    queryFn: async () => {
-      const res = await axiosInstance.get('/auth/me')
-      return res.data
-    },
-    retry: false, // Auth check --that are help us to stop the refetching after by one. 
-  })
+  
+  const {isloading, authUser} = useAuthUser() 
 
-  const authUser = authData?.user
-  console.log(authUser);
+  const isAuthenticated = Boolean(authUser)
+
+  const isOnboardingComplete = authUser.isOnboardingComplete 
+
+  if (isLoading) return <PageLoader />
+  
+
+  // if (error) {
+  //   return <div>Something went wrong</div>
+  // }
   
   
   return (
