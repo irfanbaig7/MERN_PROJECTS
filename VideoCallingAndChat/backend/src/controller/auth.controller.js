@@ -48,8 +48,8 @@ export const signup = async (req, res) => {
                 image: newUser.profilePic || "",
             })
             console.log(`Stream user created for ${newUser.fullname}`);
-        } catch (error) {
-            console.log("Error creating Stream user : ", error.message);
+        } catch (streamError) {
+            console.log("Error updating Stream user during onboarding:", streamError.message);
         }
 
 
@@ -71,9 +71,8 @@ export const signup = async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).json({
-            error: "Something went wrong. inside SignUp",
-        });
+        console.error("Onboarding error:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 
 }
@@ -116,10 +115,8 @@ export const login = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({
-            error: "Something went wrong. inside Login",
-        });
+        console.error("Onboarding error:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }
 export const logout = async (req, res) => {

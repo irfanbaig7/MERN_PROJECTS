@@ -6,8 +6,6 @@ import { signUp } from '../lib/Api.js';
 
 const SignUpPage = () => {
 
-  // const [isPending, setIsPending] = useState()
-
   const [signupData, setSignupData] = useState(
     {
       fullname: "",
@@ -18,11 +16,11 @@ const SignUpPage = () => {
 
   const queryClient = useQueryClient()
 
-  const { isPending, mutate: signupMutaion, error } = useMutation({
+  const { isPending, mutate: signupMutaion, error } = useMutation({ // here usemutation basically use hota hai data post, update, delete 
     mutationFn: signUp,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }) // on sucess kya refetch karne ka kam karta hai 
   });
-
+  
   const handleSignup = (e) => {
     e.preventDefault()
     signupMutaion(signupData)
@@ -63,11 +61,11 @@ const SignUpPage = () => {
                   {/* FULLNAME */}
                   <div className="form-control w-full">
                     <label className="label">
-                      <span className="label-text">Full Name</span>
+                      <span className="text-[#CAC9C9]">Full Name</span>
                     </label>
                     <input
                       type="text"
-                      placeholder="John Doe"
+                      placeholder="Enter your name"
                       className="input input-bordered w-full"
                       value={signupData.fullname}
                       onChange={(e) => setSignupData({ ...signupData, fullname: e.target.value })}
@@ -77,11 +75,11 @@ const SignUpPage = () => {
                   {/* EMAIL */}
                   <div className="form-control w-full">
                     <label className="label">
-                      <span className="label-text">Email</span>
+                      <span className="text-[#CAC9C9]">Email</span>
                     </label>
                     <input
                       type="email"
-                      placeholder="john@gmail.com"
+                      placeholder="Enter your email"
                       className="input input-bordered w-full"
                       value={signupData.email}
                       onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
@@ -91,11 +89,11 @@ const SignUpPage = () => {
                   {/* PASSWORD */}
                   <div className="form-control w-full">
                     <label className="label">
-                      <span className="label-text">Password</span>
+                      <span className="text-[#CAC9C9]">Password</span>
                     </label>
                     <input
                       type="password"
-                      placeholder="********"
+                      placeholder="Enter your password"
                       className="input input-bordered w-full"
                       value={signupData.password}
                       onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
