@@ -1,16 +1,17 @@
-
 import React from 'react'
-import { useQuery } from 'react-query'
-import { getAuthUser } from '../lib/Api.js'
+import { getAuthUser } from '../lib/Api'
+import { useQuery } from '@tanstack/react-query'
 
 const useAuthUser = () => {
   const authUser = useQuery({
-    queryKey: ["authUser"],
+    queryKey: ['authUser'],
     queryFn: getAuthUser,
-    retry: false, // Auth check --that are help us to stop the refetching after by one. 
+    retry: false // // retry: false → no auto retries on error (only 1 request)
   })
 
-  return {isloading: authUser.isLoading, authData: authUser.data}
+  return { isLoading: authUser.isLoading, authUser: authUser.data?.user}
+
+
 }
 
 export default useAuthUser
