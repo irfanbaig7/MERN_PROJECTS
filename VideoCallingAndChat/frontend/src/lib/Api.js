@@ -18,3 +18,11 @@ export const complateOnboarding = async (onboardData) => {
     const response = await axiosInstance.post("/auth/onboarding", onboardData)
     return response.data
 }
+
+
+
+// create a login function for mutationFn
+export const logIn = async (logInData) => {
+    const res = await axiosInstance.post("/auth/login", logInData)
+    return res.data
+}
