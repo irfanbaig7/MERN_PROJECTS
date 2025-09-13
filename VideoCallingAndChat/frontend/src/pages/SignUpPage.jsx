@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { signUp } from '../lib/Api.js';
+import useSignup from '../hooks/useSignup.js';
 
 const SignUpPage = () => {
 
@@ -14,13 +13,8 @@ const SignUpPage = () => {
     }
   )
 
-  const queryClient = useQueryClient()
+  const { isPending, signupMutaion, error } = useSignup();
 
-  const { isPending, mutate: signupMutaion, error } = useMutation({ // here usemutation basically use hota hai data post, update, delete 
-    mutationFn: signUp,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }) // on sucess kya refetch karne ka kam karta hai 
-  });
-  
   const handleSignup = (e) => {
     e.preventDefault()
     signupMutaion(signupData)
@@ -39,11 +33,11 @@ const SignUpPage = () => {
 
 
           {/* Error handling  */}
-          { error && (
-              <div className='alert alert-error mb-4'>
-                <span>{error?.response?.data?.message || error?.response?.data?.error || error.message}</span>
-              </div>
-            )
+          {error && (
+            <div className='alert alert-error mb-4'>
+              <span>{error?.response?.data?.message || error?.response?.data?.error || error.message}</span>
+            </div>
+          )
           }
 
 
