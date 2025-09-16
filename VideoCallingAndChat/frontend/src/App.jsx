@@ -10,6 +10,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { Route } from 'react-router-dom'
 import PageLoader from './components/PageLoader'
 import useAuthUser from './hooks/useAuthUser'
+import Layout from './components/Layout'
 
 
 const App = () => {
@@ -27,33 +28,20 @@ const App = () => {
 
 
   return (
-    <div>
-
-      <nav className='flex gap-4 p-1 bg-blue-400'>
-        <Link to="/">Home</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/chat">Chat</Link>
-        <Link to="/call">Call</Link>
-        <Link to="/notifications">Notifications</Link>
-        <Link to="/onboarding">Onboarding</Link>
-        <Link to="/signup">Sign Up</Link>
-      </nav>
-
-
-
-      <button onClick={() => toast.success("Kaise ho")}>Toast</button>
-
+    <div className='h-screen' data-theme="forest">
       <Routes>
         {/* Define your routes here */}
         <Route path="/" element={isAuthenticated && isOnboarded ? (
-          <HomePage />
+          <Layout showSiderbar={true}>
+            <HomePage />
+          </Layout>
         ) : (
           <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
         )} />
         <Route path="/signup" element={!isAuthenticated ? <SignUpPage /> : <Navigate to={isOnboarded ? "/" : "/onboarding"} />} />
         <Route path="/login" element={
           !isAuthenticated ? <LoginPage /> : <Navigate to={isOnboarded ? "/" : "/onboarding"} />
-          } />
+        } />
         <Route path="/notifications" element={isAuthenticated ? <NotificationPage /> : <Navigate to="/login" />} />
         <Route path="/call" element={isAuthenticated ? <CallPage /> : <Navigate to="/login" />} />
         <Route path="/chat" element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />} />
@@ -68,13 +56,13 @@ const App = () => {
             <Navigate to="/login" />
           )
         } />
-        
+
       </Routes>
 
 
 
 
-      <Toaster />
+      
     </div>
   )
 }

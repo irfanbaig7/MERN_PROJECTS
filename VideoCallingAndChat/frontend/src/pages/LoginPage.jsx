@@ -1,9 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ShipWheelIcon } from 'lucide-react'
 import React, { useState } from 'react'
 import { Link } from 'react-router'
-import { logIn } from '../lib/Api'
-import toast from 'react-hot-toast'
 import useLogin from '../hooks/useLogin'
 
 const LoginPage = () => {
