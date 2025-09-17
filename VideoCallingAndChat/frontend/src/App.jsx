@@ -11,6 +11,7 @@ import { Route } from 'react-router-dom'
 import PageLoader from './components/PageLoader'
 import useAuthUser from './hooks/useAuthUser'
 import Layout from './components/Layout'
+import { useThemeStore } from './Store/useThemeStore'
 
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
 
 
   const { isLoading, authUser } = useAuthUser()
+  const { theme } = useThemeStore()
 
   const isAuthenticated = Boolean(authUser) // convert authUser to boolean value
   const isOnboarded = authUser?.isOnboarded
@@ -28,7 +30,7 @@ const App = () => {
 
 
   return (
-    <div className='h-screen' data-theme="forest">
+    <div className='h-screen' data-theme={theme}>
       <Routes>
         {/* Define your routes here */}
         <Route path="/" element={isAuthenticated && isOnboarded ? (
@@ -62,7 +64,7 @@ const App = () => {
 
 
 
-      
+      <Toaster />
     </div>
   )
 }

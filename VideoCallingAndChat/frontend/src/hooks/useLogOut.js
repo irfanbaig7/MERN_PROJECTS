@@ -10,6 +10,7 @@ const useLogOut = () => {
     const {mutate: logoutMutation, isPending, error} = useMutation({
         mutationFn: logOut,
         onSuccess: () => {
+            toast.success("Logout successfully")
             queryClient.invalidateQueries({queryKey : ["authUser"]})
         }
     })
