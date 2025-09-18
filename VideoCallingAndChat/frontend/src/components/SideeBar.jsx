@@ -9,7 +9,7 @@ const SideeBar = () => {
   const { authUser } = useAuthUser()
   const location = useLocation();
   const currentPath = location.pathname;
-  console.log(currentPath);
+  log(currentPath);
 
 
   return (

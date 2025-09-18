@@ -47,9 +47,9 @@ export const signup = async (req, res) => {
                 name: newUser.fullname,
                 image: newUser.profilePic || "",
             })
-            console.log(`Stream user created for ${newUser.fullname}`);
+            log(`Stream user created for ${newUser.fullname}`);
         } catch (streamError) {
-            console.log("Error updating Stream user during onboarding:", streamError.message);
+            log("Error updating Stream user during onboarding:", streamError.message);
         }
 
 
@@ -67,11 +67,11 @@ export const signup = async (req, res) => {
         res.status(201).json({
             success: true, user: newUser, message: "Signup successfully"
         })
-        console.log("Signup successfully");
+        log("Signup successfully");
 
 
     } catch (error) {
-        console.error("Onboarding error:", error);
+        error("Onboarding error:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 
@@ -111,11 +111,11 @@ export const login = async (req, res) => {
         res.status(200).json({
             success: true, message: "Login successfully", user
         })
-        console.log("Login successfully");
+        log("Login successfully");
 
 
     } catch (error) {
-        console.error("Onboarding error:", error);
+        error("Onboarding error:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
@@ -125,12 +125,12 @@ export const logout = async (req, res) => {
 }
 
 export const onboard = async (req, res) => {
-    // console.log(req.user);
+    // log(req.user);
     try {
 
         const userId = req.user._id
         const { fullname, bio, nativeLanguage, learingLanguage, location } = req.body
-        // console.log(fullname, bio, nativeLanguage, learingLanguage, location); 
+        // log(fullname, bio, nativeLanguage, learingLanguage, location); 
         if (!fullname || !bio || !nativeLanguage || !learingLanguage || !location) {
             return res.status(400).json({
                 message: "All fields are required",
@@ -158,15 +158,15 @@ export const onboard = async (req, res) => {
                 name: updatedUser.fullname,
                 image: updatedUser.profilePic,
             })
-            console.log(`Stream user updated after onboarding for ${updatedUser.fullname}`);
+            log(`Stream user updated after onboarding for ${updatedUser.fullname}`);
         } catch (error) {
-            console.log("Error creating Stream user : ", error.message);
+            log("Error creating Stream user : ", error.message);
         }
 
         res.status(200).json({ success: true, user: updatedUser })
 
     } catch (error) {
-        console.log(error.message);
+        log(error.message);
         res.status(500).json({
             error: "Something went wrong. inside Login",
         });
