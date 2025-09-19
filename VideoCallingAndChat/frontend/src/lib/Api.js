@@ -12,7 +12,7 @@ export const getAuthUser = async () => {
         const response = await axiosInstance.get("/auth/me")
         return response.data
     } catch (error) {
-        log("Error accure inside getAuth : ", error);
+        console.log("Error accure inside getAuth : ", error);
         return null;
     }
 }

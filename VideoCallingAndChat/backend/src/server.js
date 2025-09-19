@@ -23,6 +23,6 @@ app.use("/api/users", userRoutes)
 app.use("/api/chat", chatRoutes)
 
 app.listen(process.env.PORT, () => {
-    log("Server start successfully");
+    console.log("Server start successfully");
     connectDB()
 })

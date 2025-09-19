@@ -31,7 +31,7 @@ export const protectedRoute = async (req, res, next) => {
         next()
 
     } catch (error) {
-        log(error.message);
+        console.log(error.message);
         res.status(500).json({
             error: "Something went wrong. inside Login",
         });

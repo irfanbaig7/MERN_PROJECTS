@@ -18,7 +18,7 @@ export const getRecomendedUsers = async (req, res) => {
 
         res.status(200).json(recommendedUser)
     } catch (error) {
-        log(error.message);
+        console.log(error.message);
         res.status(500).json({
             error: "Something went wrong. inside getRecomendedUsers",
         });
@@ -29,7 +29,7 @@ export const getMyFriends = async (req, res) => {
         const user = await User.findById(req.user.id).select("friends").populate("friends", "fullname profilePic nativeLanguage learingLanguage")
         res.status(200).json(user.friends)
     } catch (error) {
-        log(error.message);
+        console.log(error.message);
         res.status(500).json({
             error: "Something went wrong. inside getMyfriends",
         });
@@ -78,7 +78,7 @@ export const sendFriendReq = async (req, res) => {
         res.status(200).json({ message: "Friend request Created successfully", friendRequest })
 
     } catch (error) {
-        log(error.message);
+        console.log(error.message);
         res.status(500).json({
             error: "Something went wrong. inside sendFriendrequest",
         });
@@ -116,7 +116,7 @@ export const acceptFriendReq = async (req, res) => {
         res.status(200).json({ message: "Frd request accepted" })
 
     } catch (error) {
-        log(error);
+        console.log(error);
         res.status(500).json({
             message: "Somthing went wrong inside acceptFriendrequest"
         })
@@ -139,7 +139,7 @@ export const getfriendRequest = async (req, res) => {
         res.status(200).json({ incommingFrdReq, acceptedReq })
 
     } catch (error) {
-        log(error);
+        console.log(error);
         res.status(500).json({
             message: "Somthing went wrong inside getfriendRequest"
         })
@@ -157,7 +157,7 @@ export const getOutGoingFriendRequest = async (req, res) => {
         res.status(200).json({ outgoingRequest })
 
     } catch (error) {
-        log(error);
+        console.log(error);
         res.status(500).json({
             message: "Somthing went wrong inside getOutGoingFriendRequest"
         })
